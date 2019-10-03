@@ -1,59 +1,142 @@
 import React, { Component } from 'react';
-
+import MovieService from './MovieService';
+import CategoryService from './CategoryService';
+import { TextField, MenuItem, Paper, Button } from '@material-ui/core'
+import { NavLink } from 'react-router-dom';
 class SubmissionForm extends Component {
 
     constructor(props) {
         super(props);
+        this.MovieService = new MovieService();
+        this.CategoryService = new CategoryService();
         this.state = {
-            mName: '',
-            mNames: [],
-            mYear: '',
-            mBudget: '',
-            MovieIndex:0
+            id: 0,
+            title: '',
+            year: '',
+            budget: '',
+            category_ids: [],
+            MovieIndex: 0
+
         };
 
     }
-    componentDidMount(){
-        let newIndex=localStorage.getItem('MovieIndex')|0
-        this.setState({MovieIndex:newIndex})
+
+    componentDidMount() {
+        this.CategoryService.getAll().then(res => {
+            console.log(res)
+            this.setState({ categories: res })
+        })
     }
 
     handleChange = (event) => {
         const input = event.target;
         const value = input.type === 'checkbox' ? input.checked : input.value;
-
         this.setState({ [input.name]: value });
     };
 
-
+    handleCategoryChange = (evt) => {
+        this.setState({ chosen: evt.target.value })
+    }
+    addCategory = () => {
+        if (this.state.chosen) {
+            let chosenArray = [...this.state.category_ids]
+            let found = false;
+            for (let i = 0; i < chosenArray.length; i++) {
+                if (chosenArray[i] == this.state.chosen) found = true;
+            }
+            if (found) { }
+            else {
+                chosenArray.push(this.state.chosen)
+                this.setState({ category_ids: chosenArray })
+            }
+        }
+    }
 
     handleFormSubmit = () => {
-
-        const { mName, mYear, mBudget } = this.state
-        const Movie={mName,mYear,mBudget}
-        localStorage.setItem('movie'+this.state.MovieIndex,JSON.stringify(Movie))
-        this.setState({MovieIndex:this.state.MovieIndex+1},()=>localStorage.setItem("MovieIndex",this.state.MovieIndex))
-        
-
-
+        const { title, year, budget, category_ids } = this.state
+        const movie = { title, year, budget, category_ids }
+        this.MovieService.addNew(movie).then(json => {
+            console.log("successful")
+            this.setState({ movie: json })
+        });
     };
 
-
-
     render() {
+        const { title, year, budget } = this.state
         return (
-            <form onSubmit={this.handleFormSubmit}>
-                <label>
-                    Movie Name: <input name="mName" value={this.state.mName} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Year: <input name="mYear" value={this.state.mYear} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Budget: <input name="mBudget" value={this.state.mBudget} onChange={this.handleChange} />
-                </label>
-                <button type="submit">Submit Movie</button>
-            </form>
+            <div className="form-container">
+                <NavLink to="/display" style={{ textDecoration: 'none', color: 'secondary' }}>
+                    <div className="navlink-button">
+                        <Button
+                            color="secondary"
+                            className="edit-order-button"
+                            title="EditOrder"
+                            variant="outlined"
+                        >
+                            View movie list
+                        </Button>
+                    </div>
+                </NavLink>
+                <Paper className="form-paper">
+                    <div>
+                        <TextField
+                            id=""
+                            label="Name"
+                            className="form-fields"
+                            value={title}
+                            onChange={this.handleChange}
+                            margin="normal"
+                        />
+                        <TextField
+                            id=""
+                            label="Year"
+                            value={year}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            style={{ float: 'right' }}
+                        />
+                        <TextField
+                            id=""
+                            label="Budget"
+                            value={budget}
+                            onChange={this.handleChange}
+                            margin="normal"
+                        />
+                    </div>{this.state.categories ?
+                        <React.Fragment>
+                            <div>
+                                <TextField
+                                    id=""
+                                    select
+                                    label="Select"
+                                    fullWidth
+                                    value={this.state.chosen}
+                                    onChange={this.handleCategoryChange}
+                                    helperText="Please choose your movie genre(s)"
+                                    margin="normal"
+                                >
+                                    {this.state.categories.map(option => (
+                                        <MenuItem key={option.title} value={option.id}>
+                                            {option.title}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <Button variant="outlined" onClick={this.addCategory}>Add Genre</Button>
+                                {this.state.category_ids.map(id => {
+                                    let title = ''
+                                    for (let i = 0; i < this.state.categories.length; i++) {
+                                        if (this.state.categories[i].id == id) title = this.state.categories[i].title;
+                                    }
+                                    return (<h3>{title}</h3>)
+                                })}
+                            </div>
+                        </React.Fragment>
+                        : null}
+                    <div className="submit-button">
+                        <Button variant="contained" color="secondary" onClick={this.handleFormSubmit}>Submit Movie</Button>
+                    </div>
+                </Paper>
+            </div>
         )
     }
 }

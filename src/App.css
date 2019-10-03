@@ -2,11 +2,43 @@
   /* text-align: center; */
 }
 
-.cards-container {
-  padding: 5% 10%;
+.form-container{
+  background: #411A6D;
+  /* padding: 20%; */
+  height: 100vh;
 }
-.cards-container h1{
+
+.navlink-button{
+  position: relative;
+  top: 45px;
+
+  margin: auto;
+  text-align: -webkit-match-parent;
+  width: max-content;
+}
+
+.form-paper{
+  padding: 3% 10%;
+  width: 40%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cards-page {
+  background: #411A6D;
+  min-height: 100vh;
+}
+
+.page-content{
+  width: 80%;
+  margin: 100px auto 0;
+}
+
+.cards-page h1{
   text-align: center;
+  color: #F50057;
 }
 .card-wrapper{
   display: inline-block;
@@ -16,4 +48,13 @@
   display: inline-block;
   width: auto;
   padding: 30px;
+}
+.submit-button{
+  width: 150px;
+  margin: 67px auto 0;
+}
+
+.card-buttons{
+  text-align: center;
+  margin-top: 5px;
 }
