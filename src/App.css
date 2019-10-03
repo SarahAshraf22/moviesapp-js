@@ -36,6 +36,12 @@
   margin: 100px auto 0;
 }
 
+.searchbar{
+  width: 40%;
+  margin:20px auto;
+  padding: 8px 20px;
+}
+
 .cards-page h1{
   text-align: center;
   color: #F50057;

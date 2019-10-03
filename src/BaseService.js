@@ -2,8 +2,14 @@ export class BaseService {
     constructor(url) {
         this.url = url;
     }
-    getAll() {
-        return fetch(`${this.url}`)
+    getAll(titleFilter) {
+        
+        let url=`${this.url}`
+            if(titleFilter){
+                url+='?search='+titleFilter
+            }
+            
+        return fetch(url)
             .then(res => {
                 return res.json();
             });

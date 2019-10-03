@@ -72,6 +72,7 @@ class SubmissionForm extends Component {
                             className="edit-order-button"
                             title="EditOrder"
                             variant="outlined"
+                            name="title"
                         >
                             View movie list
                         </Button>
@@ -81,26 +82,32 @@ class SubmissionForm extends Component {
                     <div>
                         <TextField
                             id=""
+                            //required
                             label="Name"
                             className="form-fields"
                             value={title}
                             onChange={this.handleChange}
                             margin="normal"
+                            name="title"
                         />
                         <TextField
                             id=""
+                            //required
                             label="Year"
                             value={year}
                             onChange={this.handleChange}
                             margin="normal"
+                            name="year"
                             style={{ float: 'right' }}
                         />
                         <TextField
                             id=""
+                           //required
                             label="Budget"
                             value={budget}
                             onChange={this.handleChange}
                             margin="normal"
+                            name="budget"
                         />
                     </div>{this.state.categories ?
                         <React.Fragment>
